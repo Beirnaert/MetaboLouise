@@ -1,0 +1,177 @@
+---
+title: "MetaboLouise vignette"
+author: "Charlie Beirnaert"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MetaboLouise vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(tidy = FALSE)
+figwidth.out <- 600
+dpi.HQ <- 150
+```
+
+This vignette illustrates the use of the MetaboLouise package for simulating longitudinal (or dynamic) metabolomics data.
+The entire process consists of a few sequential steps
+
+* setting basic parameters such as the number of metabolites (nodes) and the number of enzymes (rates),
+* creating a network that links the nodes according to certain parameters,
+* initializing rates and mapping these to connections in the network,
+* simulating the data.
+
+There are certain optional steps such as 
+
+* creating a rate function evolution function. This is to make the rates variable depending on the network state,
+* adding external influxes to the metabolic network,
+* calculating fold changes between equalized networks without and with influx,
+
+These steps are illustrated in the second part of the vignette.
+
+## The basic model
+
+### Setting parameters and creating a network
+
+Let's construct a dataset containing 20 metabolites (nodes), with 10 enzymes governing the flow in the network. 
+The network is generated with the default parameters for connectivity.
+
+```{r params, dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out}
+    library(MetaboLouise)
+
+    set.seed(7)
+    ### General
+    Nmetabos <- 20L
+    Nrates <- 10L
+    
+    Network <- NetworkCreateR(N = Nmetabos)
+    ```
+   
+The network has a distribution similar to those of biological (metabolomics) networks: 
+Most nodes have few connections and only a few have many. 
+   
+In the image of the connection matrix underlying the network, plotted below, we can see which node are connected to which.
+```{r network image, dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out}
+    image(Network, 
+          col = terrain.colors(2), 
+          useRaster = T, 
+          axes = FALSE,
+          xlab="flow to",
+          ylab="flow from")
+    axis(1, at = c(0,1), labels=c(1, ncol(Network)),srt=45,tick=FALSE)
+    axis(2, at = c(0,1), labels=c(1, ncol(Network)),srt=45,tick=FALSE)
+
+```
+   
+   
+### Rate initialization and mapping
+   
+   All the connections indicate flow between nodes. The magnitude of the flow is governed by certain enzymes.
+   These enzymes can be seen as the rate providing instance. 
+   
+   Let's set these enzymes/rates according to a uniform distribution with values between 0 and 5 for simplicity.
+   Next, we map these rates to the existing connections. This rate_mapping has the same dimensions as the connection matrix,
+   however, this is not a binary matrix, instead it contains the value of the enzyme that maps to this connection.
+   
+   There are a great deal more connections than enzymes, hence, a single enzyme will govern multiple connections.
+   
+  
+ 
+```{r rates} 
+    rate_vector <- round(5*runif(Nrates))
+
+    rate_mapping <- Network
+    active_rates <- which(Network == 1, arr.ind = T)
+        for(rr in 1:nrow(active_rates)){
+            rate_mapping[active_rates[rr,1], active_rates[rr,2]] <- sample(seq_along(rate_vector), size = 1)
+        }
+    
+```
+
+### Data simulation
+
+Now we can run a simulation. A few simulation dependent parameters need to be provided, such as time step,
+simulation start and end time, and a vector with initial starting concentrations for the nodes. It is also
+possible to provide a single starting concentrations, this initiates all nodes with the same value. 
+
+Other optional parameters can be set (see below) but we will turn these off for this first simulation.
+
+```{r simulation, dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out}
+    
+    SimulatedData <- DataSimulateR(NetworkMatrix = Network, dT = 0.01, Tstart = 0, Tstop = 5, 
+                                   T0_nodes = 100, rate_vector = rate_vector, 
+                                   rate_mapping = rate_mapping, plot_out = TRUE)
+ 
+```
+ 
+ 
+Certain things can be noted. For example, the network has not reached an equilibrium state at the final time point and
+only a  few nodes in the receive most of the concentration and most tend to 0 concentration. This is a common result when
+performing a simulation solely based on a network without changing rates and external influxes. 
+
+In the section below we go deeper into these aspects.
+ 
+ 
+## Part 2: Additional simulation options
+   
+   
+### Variable rates 
+
+By allowing the individual node concentrations to influence the quantity of enzymes, a new dynamic appears in the network. 
+Let's look at a few examples from the *RateFunctionBuildR* function:
+```{r rates2, results = "hide", dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out} 
+    
+Rate_function <- RateFunctionBuildR(type = "sigmoid", C_range = c(0,200), sig_C0 = 100)
+RateFunctionBuildR(type = c("sigmoid", "step"), C_range = c(0,200), 
+                   sig_C0 = 50, sig_k = 0.2,
+                   step_levels = c(0,1,2), step_switchpoints = c(10, 140))
+
+```
+
+The first function will result in a sigmoidal increasing factor for the rate if the source concentration rises above 100.
+In the second plot a comparison between a sigmoidal and stepwise rate multiplier function is illustrated. For the following simulation we will use the first sigmoidal curve (stored in the *Rate_function* object).
+
+### External influxes
+
+Next we can also include an external influx for certain nodes. This  requires setting the time period of the influx as well as
+the vector (*influx_vector*) with the actual influx quantities. 
+
+
+```{r influxVSno_influx, dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out} 
+    
+    No_influx <- DataSimulateR(NetworkMatrix = Network, dT = 0.01, Tstart = 0, Tstop = 5, 
+                               T0_nodes = 100, influx_vector = NULL, influx_Tframe = NULL,
+                               rate_vector = rate_vector, rate_mapping = rate_mapping, 
+                               RateFunctionObject = Rate_function, plot_out = TRUE)
+    
+    
+    influx_vector = c(rep(1,10),rep(0,Nmetabos-10))
+    With_influx <- DataSimulateR(NetworkMatrix = Network, dT = 0.01, Tstart = 0, Tstop = 5, 
+                                 T0_nodes = 100, influx_vector = influx_vector, influx_Tframe = 0.5,
+                                 rate_vector = rate_vector, rate_mapping = rate_mapping, 
+                                 RateFunctionObject = Rate_function, plot_out = TRUE)
+    
+```
+
+
+We can compare the equilibrium concentration values of the network with influx vs the network without influx.
+For this let's use the *GetFoldChanges* function which calcluates the fold changes and plots the distribution.
+
+
+```{r FC_plot, results = "hide", dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out} 
+      
+    GetFoldChanges(ReferenceDataObject = No_influx, AlternativeDataObject = With_influx, plot_title = "Influx vs no influx")
+
+```
+
+
+Clearly, most nodes have roughly the same end state. However, some metaboltes (nodes) have a substantially increased ending 
+concentrations, whereas other nodes are almost reduced to zero in the situation with additional influx. 
+
+This draining of certain nodes is caused by the coupling of the enzymes, together with the variable rates. 
+An influx causes an increase in concentration of node X, this causes an increase in rate x, but rate x also manages
+the flow from node Y to Z. Thus, depleting Y faster than in the case where no influx is present.
+
