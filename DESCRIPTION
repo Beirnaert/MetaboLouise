@@ -16,5 +16,5 @@ Suggests:
     rmarkdown
 LazyData: true
 VignetteBuilder: knitr
-License: GPL-3 + file LICENSE
+License: GPL-3 
 RoxygenNote: 6.1.0
