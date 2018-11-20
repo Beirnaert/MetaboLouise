@@ -38,7 +38,7 @@ DataSimulateR(NetworkMatrix, dT, Tstart, Tstop, T0_nodes = 100,
 A list with: the time vector and a matrix with the simulated data. (1 row per node)
 }
 \description{
-Simualted dynamic/longitudinal data based on an underlying network. The network is initialized with values 
+Simulated dynamic/longitudinal data based on an underlying network. The network is initialized with values 
 for every node (e.g. concentrations in the case of metabolites). These values evolve over time caused by the
 (variable) rates.
 }

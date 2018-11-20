@@ -10,7 +10,7 @@ NetworkCreateR(N, BA_power = 0.5, BA_mValue = 4, plothist = TRUE,
 \arguments{
 \item{N}{the number of nodes in the network (metabolites)}
 
-\item{BA_power}{(igrap parameter) The power of the prefferential attachment.}
+\item{BA_power}{(igrap parameter) The power of the preferential attachment.}
 
 \item{BA_mValue}{(igrap parameter) The number of edges to add in each time step}
 
@@ -18,7 +18,7 @@ NetworkCreateR(N, BA_power = 0.5, BA_mValue = 4, plothist = TRUE,
 
 \item{histbreaks}{The number of breaks in the histogram}
 
-\item{...}{Optional additional arguments to be passed along to the network generator funcion \code{\link[igraph]{sample_pa}}.}
+\item{...}{Optional additional arguments to be passed along to the network generator function \code{\link[igraph]{sample_pa}}.}
 }
 \value{
 A matrix with the network structure

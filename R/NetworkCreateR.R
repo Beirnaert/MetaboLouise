@@ -3,11 +3,11 @@
 #' This function creates a fictional metabolomics network according to the Barabasi-Albert model. 
 #'
 #' @param N the number of nodes in the network (metabolites)
-#' @param BA_power (igrap parameter) The power of the prefferential attachment. 
+#' @param BA_power (igrap parameter) The power of the preferential attachment. 
 #' @param BA_mValue (igrap parameter) The number of edges to add in each time step
 #' @param plothist Whether to plot a histogram of the network's connectivity distribution
 #' @param histbreaks The number of breaks in the histogram 
-#' @param ... Optional additional arguments to be passed along to the network generator funcion \code{\link[igraph]{sample_pa}}. 
+#' @param ... Optional additional arguments to be passed along to the network generator function \code{\link[igraph]{sample_pa}}. 
 #'
 #' @return A matrix with the network structure
 #' 

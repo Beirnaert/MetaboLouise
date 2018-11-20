@@ -1,6 +1,6 @@
 #' DataSimulateR
 #'
-#' Simualted dynamic/longitudinal data based on an underlying network. The network is initialized with values 
+#' Simulated dynamic/longitudinal data based on an underlying network. The network is initialized with values 
 #' for every node (e.g. concentrations in the case of metabolites). These values evolve over time caused by the
 #' (variable) rates. 
 #' 

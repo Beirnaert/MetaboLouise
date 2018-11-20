@@ -158,7 +158,7 @@ the vector (*influx_vector*) with the actual influx quantities.
 
 
 We can compare the equilibrium concentration values of the network with influx vs the network without influx.
-For this let's use the *GetFoldChanges* function which calcluates the fold changes and plots the distribution.
+For this let's use the *GetFoldChanges* function which calculates the fold changes and plots the distribution.
 
 
 ```{r FC_plot, results = "hide", dpi=dpi.HQ, fig.width=7, fig.height=5, out.width = figwidth.out} 
@@ -168,7 +168,7 @@ For this let's use the *GetFoldChanges* function which calcluates the fold chang
 ```
 
 
-Clearly, most nodes have roughly the same end state. However, some metaboltes (nodes) have a substantially increased ending 
+Clearly, most nodes have roughly the same end state. However, some metabolites (nodes) have a substantially increased ending 
 concentrations, whereas other nodes are almost reduced to zero in the situation with additional influx. 
 
 This draining of certain nodes is caused by the coupling of the enzymes, together with the variable rates. 

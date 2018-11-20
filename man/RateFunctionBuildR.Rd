@@ -27,19 +27,19 @@ RateFunctionBuildR(type = c("linear", "sigmoid", "step"),
 
 \item{step_levels}{Step function parameter: the distinct levels of the function.}
 
-\item{step_switchpoints}{Step function parameter: The points (nr of levels minus 1) at which a switch is made.}
+\item{step_switchpoints}{Step function parameter: The points (nr. of levels minus 1) at which a switch is made.}
 
 \item{plot.out}{Whether to plot the resulting functions.}
 
 \item{Nplotpoints}{The number of plotpoints for the optional plot}
 }
 \value{
-A plot with the visualise rate function and a list with the necessary parameters
+A plot with the visualize rate function and a list with the necessary parameters
 }
 \description{
-Build and visualise an appropriate rate multiplier function. The flow between nodes in the network is governed by certain rates.
+Build and visualize an appropriate rate multiplier function. The flow between nodes in the network is governed by certain rates.
 These rates can be made dependent on the values of the source node (flow from source node to receiver node). 
-With this function you can visualize different types and recieve the parameters to be submitted to the simulation function.
+With this function you can visualize different types and receive the parameters to be submitted to the simulation function.
 Note that this function returns an object containing the plot parameters. The simulation function can take only function type.
 }
 \examples{
