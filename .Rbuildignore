@@ -2,6 +2,7 @@
 ^Meta$
 ^doc$
 ^README.md$
+^README-.*\.png$
 ^.travis.yml$
 ^cran-comments.md$
 ^cran-comments.Rmd$

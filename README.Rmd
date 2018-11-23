@@ -1,0 +1,60 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.path = "man/figures/README-",
+  message=FALSE
+)
+```
+
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Build Status](https://travis-ci.org/Beirnaert/MetaboLouise.svg?branch=master)](https://travis-ci.org/Beirnaert/MetaboLouise)
+
+METABOlomics LOngitudinal SimUlation Engine. A small package for simulating longitudinal/dynamic metabolomics data based on underlying biological networks. 
+
+## Overview
+
+MetaboLouise has been built to simulate dynamic metabolomics datasets. However, this focus on metabolites is not necessary. The problem can just as easily be pictured as nodes (metabolites) in a network whereby the values of the nodes (concentrations) evolve over time depending on the topology of the network and the rates (enzyme concentrations) assigned to the edges. 
+
+The basics are explained below and more specific information can be found in the vignette (on [CRAN](https://cran.r-project.org/package=MetaboLouise)). 
+
+
+## Installation
+
+```{r, eval = FALSE}
+install.packages("MetaboLouise")
+
+# Or the the development version from GitHub (requires devtools package):
+# install.packages("devtools")
+devtools::install_github("Beirnaert/MetaboLouise")
+```
+
+
+## Usage
+
+The proof of the pudding is in the eating. Hence, the most basic example.
+
+
+```{r example, dpi=400, fig.width=6, fig.height=4}
+#library(MetaboLouise)
+devtools::load_all()
+set.seed(1)
+Nmetabos <- 20
+Nrates <- 10
+ 
+Network <- NetworkCreateR(N = Nmetabos, plothist = FALSE)
+ 
+     
+Example_simulation <- DataSimulateR(NetworkMatrix = Network, 
+                                    dT = 0.01, 
+                                    Tstart = 0, 
+                                    Tstop = 3,
+                                    T0_nodes = 100)
+
+```
+
