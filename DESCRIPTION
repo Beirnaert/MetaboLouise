@@ -1,10 +1,10 @@
 Package: MetaboLouise
-Version: 1.0.0
-Date: 2018-11-20
+Version: 1.0.1
+Date: 2018-12-05
 Title: METABOlomics LOngitudinal SimUlation Engine
 Author: Charlie Beirnaert
 Maintainer: Charlie Beirnaert <charlie_beirnaert@icloud.com>
-Description: Simulating dynamic (longitudinal, time-resolved) metabolomics data based on an underlying biological network. The network is initiating with certain concentrations and evolves over a simulated time period. Optionally external influxes (concentration drivers) can be added.
+Description: Simulating dynamic (longitudinal, time-resolved) metabolomics data based on an underlying biological network. The network is initiating with certain concentrations and evolves over a simulated time period. Optionally external influxes (concentration drivers) can be added. More details can be found in Beirnaert et al. (2018) <https://doi.org/10.1101/482224>
 Depends:
     R (>= 3.1.0),
 Imports:
